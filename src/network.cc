@@ -2,40 +2,52 @@
 
 #include "network.hh"
 
-double random( double min, double max ){
-	return min + static_cast <double> ( rand() ) / ( static_cast <double> ( RAND_MAX / ( max - min ) ) );
+#define FAKE_RANDOM
+
+double random( double min, double max ) {
+#ifdef FAKE_RANDOM
+	return min + (max - min)*0.75;
+#else
+	return min + static_cast < double > ( rand() ) / ( static_cast < double > ( RAND_MAX / ( max - min ) ) );
+#endif
 }
 
-std::vector<double> Network::activate(std::vector<double> inputs ){
+std::vector<double> Network::activate( std::vector<double> inputs ) {
 
 	auto inodes = m_input_layer->m_nodes;
 
 	assert( inputs.size() == inodes.size() &&
-		"INPUT MUST BE THE SIZE OF THE NODES IN THE INPUT LAYER");
+		"INPUT MUST BE THE SIZE OF THE NODES IN THE INPUT LAYER" );
 
-	for( size_t i = 0; i < inodes.size(); ++i ){
-		inodes[i]->_push( inputs[i], true );
+	for( size_t i = 0; i < inodes.size(); ++i ) {
+		inodes[i]->_input( inputs[i] );
 	}
-		
+
 	std::vector<double> outputs;
-	for( auto o : m_output_layer->m_nodes ){
-		outputs.push_back( o->m_synapse_sum );
+	for( auto o : m_output_layer->m_nodes ) {
+		outputs.push_back( o->m_value );
 	}
 	return outputs;
 }
 
-void Network::propagate( double learning_rate, std::vector<double> results ) {
+void Network::propagate( double learning_rate, std::vector<double> target ) {
 
 	auto onodes = m_output_layer->m_nodes;
 
-	assert( results.size() == onodes.size() &&
+	assert( target.size() == onodes.size() &&
 		"RESULTS MUST BE THE SIZE OF THE NODES IN THE OUTPUT LAYER" );
 
-	for( size_t i = 0; i < onodes.size(); ++i ){
+	for( size_t i = 0; i < onodes.size(); ++i ) {
 
 		auto on = onodes[i];
-		double this_error = results[i] - on->m_synapse_sum;
-      on->_compute_error(this_error, learning_rate , true );
+		double this_error = target[i] - on->m_value;
+		on->_start_compute_error( this_error, learning_rate );
+
+	}
+
+	for( size_t i = 0; i < onodes.size(); ++i ) {
+		auto on = onodes[i];
+		on->_backpropagate( on->m_value, learning_rate );
 	}
 
 }
