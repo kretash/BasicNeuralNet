@@ -12,6 +12,8 @@ double random( double min, double max);
 class Node;
 
 static int32_t s_component_id_count = 0;
+static double s_alpha = 0.1; // Momentum
+
 class Component{
 public:
 	Component(){
@@ -36,9 +38,10 @@ private:
 	void _push( double value );
 	void _fire();
 
-   void _compute_error(double value);
+   void _compute_error(double delta, double learning_rate );
 
 	double m_weight = 0.0;
+   double m_delta_weight = 0.0;
 	std::shared_ptr<Node> m_link_to;
 	std::shared_ptr<Node> m_link_from;
 };
@@ -64,7 +67,7 @@ private:
 	void _fire();
 
    // computes the error. similar to push but backwards.
-   void _compute_error(double value);
+   void _compute_error(double delta, double learning_rate );
 
 	bool m_end_node = false;
 

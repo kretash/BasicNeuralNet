@@ -36,17 +36,17 @@ void Node::_fire( ){
    m_forward_load = 0;
 }
 
-void Node::_compute_error(double value){
+void Node::_compute_error(double delta, double learning_rate ){
 
-   m_error_sum += value;
+   m_error_sum += delta;
 
    ++m_backward_load;
    if( m_backward_load == m_f_links.size() ){
 
-      m_delta = ( 1.0 - m_value ) * m_value * value;
+      m_delta = ( 1.0 - m_value ) * m_value * delta;
 
       for( auto blinks : m_b_links ){
-         blinks->_compute_error(m_delta);
+         blinks->_compute_error(m_delta, learning_rate);
       }
 
       m_error_sum = 0.0;

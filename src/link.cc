@@ -14,6 +14,14 @@ void Link::_fire() {
 	m_link_to->_fire();
 }
 
-void Link::_compute_error(double value){
-   m_link_from->_compute_error( value * m_weight );
+void Link::_compute_error(double delta, double learning_rate){
+
+   m_link_from->_compute_error( delta * m_weight, learning_rate );
+
+   const double lamda = 0.0;
+
+   m_weight += learning_rate * ( delta * m_link_from->m_value + lamda * m_link_from->m_value ) + s_alpha * m_delta_weight;
+   m_delta_weight = learning_rate * delta * m_link_from->m_value;
+   m_link_to->m_bias += learning_rate * delta;
+
 }

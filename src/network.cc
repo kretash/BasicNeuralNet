@@ -40,7 +40,7 @@ void Network::propagate( double learning_rate, std::vector<double> results ) {
 
 		auto on = onodes[i];
 		double this_error = results[i] - on->m_synapse_sum;
-      on->_compute_error(this_error);
+      on->_compute_error(this_error, learning_rate );
 	}
 
 }
