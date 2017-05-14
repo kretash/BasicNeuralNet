@@ -16,23 +16,24 @@ int main( int argc, char** argv ) {
 	input_layer->project( hidden_layer );
 	hidden_layer->project( output_layer );
 
-	std::shared_ptr<Network> network = std::make_shared<Network>( input_layer, output_layer );
+	std::shared_ptr<Network> network = std::make_shared<  Network>( input_layer, output_layer );
 
 	// train the network - learn XOR
 	double learning_rate = 0.3;
-	for( uint32_t i = 0; i < 10000; ++i ) {
+	for( uint32_t i = 0; i < 20; ++i ) {
 
-		network->activate( { 0,0 } );
-		network->propagate( learning_rate, { 0 } );
+		auto t = network->activate( { 0,0 } );
+      std::cout << " 0 XOR 0 -> " << t[0] << "\n";
+		//network->propagate( learning_rate, { 0 } );
 
-		network->activate( { 0,1 } );
-		network->propagate( learning_rate, { 1 } );
+		//network->activate( { 0,1 } );
+		//network->propagate( learning_rate, { 1 } );
 
-		network->activate( { 1,0 } );
-		network->propagate( learning_rate, { 1 } );
+		//network->activate( { 1,0 } );
+		//network->propagate( learning_rate, { 1 } );
 
-		network->activate( { 1,1 } );
-		network->propagate( learning_rate, { 0 } );
+		//network->activate( { 1,1 } );
+		//network->propagate( learning_rate, { 0 } );
 	}
 
 	std::cout << " 0 XOR 0 -> " << network->activate( { 0,0 } )[0] << "\n";

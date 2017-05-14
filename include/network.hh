@@ -62,12 +62,15 @@ private:
 
    // pushes a value to the node. When all links have been pushed
    // the node will fire the values forward.
-	void _push(double value);
+   // at the begining of the network there will be no way to start as there are no back links.
+   // once all back links have pushed the nodes will fire. If this is the first node it needs 
+   // force start to true as there will be no back nodes.
+	void _push(double value, bool force_start = false);
 	double _sigmoid( double num );
 	void _fire();
 
    // computes the error. similar to push but backwards.
-   void _compute_error(double delta, double learning_rate );
+   void _compute_error(double delta, double learning_rate, bool force_start = false );
 
 	bool m_end_node = false;
 

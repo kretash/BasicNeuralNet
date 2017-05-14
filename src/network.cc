@@ -14,11 +14,7 @@ std::vector<double> Network::activate(std::vector<double> inputs ){
 		"INPUT MUST BE THE SIZE OF THE NODES IN THE INPUT LAYER");
 
 	for( size_t i = 0; i < inodes.size(); ++i ){
-		inodes[i]->_push( inputs[i] );
-	}
-
-	for( size_t i = 0; i < inodes.size(); ++i ) {
-		inodes[i]->_fire();
+		inodes[i]->_push( inputs[i], true );
 	}
 		
 	std::vector<double> outputs;
@@ -35,12 +31,11 @@ void Network::propagate( double learning_rate, std::vector<double> results ) {
 	assert( results.size() == onodes.size() &&
 		"RESULTS MUST BE THE SIZE OF THE NODES IN THE OUTPUT LAYER" );
 
-
 	for( size_t i = 0; i < onodes.size(); ++i ){
 
 		auto on = onodes[i];
 		double this_error = results[i] - on->m_synapse_sum;
-      on->_compute_error(this_error, learning_rate );
+      on->_compute_error(this_error, learning_rate , true );
 	}
 
 }

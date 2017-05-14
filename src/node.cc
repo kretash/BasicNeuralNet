@@ -8,10 +8,10 @@ void Node::add_b_link( std::shared_ptr<Link> link ) {
 	m_b_links.push_back( link );
 }
 
-void Node::_push( double value ) {
+void Node::_push( double value , bool force_start) {
 	m_synapse_sum += value;
 	++m_forward_load;
-	if( m_forward_load == m_b_links.size() ){
+	if( m_forward_load == m_b_links.size() || force_start){
 		_fire();
 	}
 }
@@ -36,12 +36,12 @@ void Node::_fire( ){
    m_forward_load = 0;
 }
 
-void Node::_compute_error(double delta, double learning_rate ){
+void Node::_compute_error(double delta, double learning_rate, bool force_start ){
 
    m_error_sum += delta;
 
    ++m_backward_load;
-   if( m_backward_load == m_f_links.size() ){
+   if( m_backward_load == m_f_links.size() || force_start ){
 
       m_delta = ( 1.0 - m_value ) * m_value * delta;
 
