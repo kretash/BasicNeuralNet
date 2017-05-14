@@ -36,6 +36,8 @@ private:
 	void _push( double value );
 	void _fire();
 
+   void _compute_error(double value);
+
 	double m_weight = 0.0;
 	std::shared_ptr<Node> m_link_to;
 	std::shared_ptr<Node> m_link_from;
@@ -55,15 +57,32 @@ private:
 	friend class Network;
 	friend class Link;
 
+   // pushes a value to the node. When all links have been pushed
+   // the node will fire the values forward.
 	void _push(double value);
 	double _sigmoid( double num );
 	void _fire();
 
+   // computes the error. similar to push but backwards.
+   void _compute_error(double value);
+
 	bool m_end_node = false;
+
+   // The last value fired forward.
+   double m_value = 0.0;
+   // the sum of all the values of fired to this node.
 	double m_synapse_sum = 0.0;
+
+   double m_error_sum = 0.0;
 	double m_delta = 0.0;
 	double m_bias = 0.0;
-	int32_t m_load = 0;
+
+   // When the load is equal to the number of back links the node will fire.
+	int32_t m_forward_load = 0;
+   // When the load is equal to the number of forward the node will fire back.
+   // Calculating the error made from the previous iteration.
+   int32_t m_backward_load = 0;
+
 	std::vector<std::shared_ptr<Link>> m_f_links;
 	std::vector<std::shared_ptr<Link>> m_b_links;
 

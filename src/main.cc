@@ -18,8 +18,6 @@ int main( int argc, char** argv ) {
 
 	std::shared_ptr<Network> network = std::make_shared<Network>( input_layer, output_layer );
 
-	auto r = network->activate( { 5,5 } );
-
 	// train the network - learn XOR
 	double learning_rate = 0.3;
 	for( uint32_t i = 0; i < 10000; ++i ) {

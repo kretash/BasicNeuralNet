@@ -13,3 +13,7 @@ void Link::_push( double value ) {
 void Link::_fire() {
 	m_link_to->_fire();
 }
+
+void Link::_compute_error(double value){
+   m_link_from->_compute_error( value * m_weight );
+}

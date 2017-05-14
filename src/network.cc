@@ -35,16 +35,12 @@ void Network::propagate( double learning_rate, std::vector<double> results ) {
 	assert( results.size() == onodes.size() &&
 		"RESULTS MUST BE THE SIZE OF THE NODES IN THE OUTPUT LAYER" );
 
-	double error = 0.0;
 
 	for( size_t i = 0; i < onodes.size(); ++i ){
 
 		auto on = onodes[i];
-
 		double this_error = results[i] - on->m_synapse_sum;
-		on->m_delta = (1.0 - on->m_synapse_sum) * results[i] * this_error;
-		error += (0.5 * this_error * this_error );
-		
+      on->_compute_error(this_error);
 	}
 
 }
