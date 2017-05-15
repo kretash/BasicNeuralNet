@@ -3,10 +3,12 @@
 #include "network.hh"
 
 void Node::add_f_link( std::shared_ptr<Link> link ) {
+	link->m_name += "(" + this->m_name + " -> link forward)";
 	m_f_links.push_back( link );
 }
 
 void Node::add_b_link( std::shared_ptr<Link> link ) {
+	link->m_name += "(" + this->m_name + " -> <- link back)";
 	m_b_links.push_back( link );
 }
 
@@ -38,16 +40,15 @@ double  Node::_sigmoid( double num ) {
 void Node::_fire() {
 
 	m_value = _sigmoid( m_synapse_sum + m_bias );
-	//std::cout << "fire -> " << m_value << "\n";
 
-	if( m_end_node )	return;
+	m_synapse_sum = 0;
+	m_forward_load = 0;
+
+	if( m_end_node ) return;
 
 	for( auto link : m_f_links ) {
 		link->_push( m_value );
 	}
-
-	m_synapse_sum = 0;
-	m_forward_load = 0;
 }
 
 void Node::_start_compute_error( double delta, double learning_rate ) {
@@ -80,8 +81,29 @@ void Node::_compute_error( double delta, double learning_rate ) {
 	}
 }
 
-void Node::_backpropagate( double delta, double learning_rate ) {
+void Node::_start_backpropagate( double learning_rate ) {
+	
+	m_bias += learning_rate * m_delta;
+
+	m_backward_load = 0;
+
 	for( auto blinks : m_b_links ) {
-		blinks->_backpropagate( m_delta, learning_rate );
+		blinks->_backpropagate( learning_rate );
+	}
+}
+
+void Node::_backpropagate( double learning_rate ) {
+
+	++m_backward_load;
+	if( m_backward_load == m_f_links.size() ) {
+
+		m_bias += learning_rate * m_delta;
+
+		m_backward_load = 0;
+
+		for( auto blinks : m_b_links ) {
+			blinks->_backpropagate( learning_rate );
+		}
+
 	}
 }

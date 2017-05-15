@@ -1,8 +1,11 @@
+#include <string>
+
 #include "network.hh"
 
-Layer::Layer( int32_t nodes ) {
+Layer::Layer( int32_t nodes, std::string name ) {
+	this->m_name = name;
 	for( int32_t i = 0; i < nodes; ++i ) {
-		std::shared_ptr<Node> n = std::make_shared<Node>();
+		std::shared_ptr<Node> n = std::make_shared<Node>( name + " Node " + std::to_string( i ) );
 		m_nodes.push_back( n );
 	}
 }

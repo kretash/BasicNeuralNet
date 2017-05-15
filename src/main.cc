@@ -9,25 +9,30 @@ int main( int argc, char** argv ) {
 	srand( ( uint32_t ) time( nullptr ) );
 
 	// create all the resources
-	std::shared_ptr<Layer> input_layer = std::make_shared<Layer>( 2 );
-	std::shared_ptr<Layer> hidden_layer = std::make_shared<Layer>( 3 );
-	std::shared_ptr<Layer> output_layer = std::make_shared<Layer>( 1 );
+	std::shared_ptr<Layer> input_layer = std::make_shared<Layer>( 2, "Input Layer" );
+	std::shared_ptr<Layer> hidden_layer = std::make_shared<Layer>( 3, "Hidden Layer" );
+	std::shared_ptr<Layer> output_layer = std::make_shared<Layer>( 1 , "Output Layer" );
 
 	input_layer->project( hidden_layer );
 	hidden_layer->project( output_layer );
 
 	std::shared_ptr<Network> network = std::make_shared<  Network>( input_layer, output_layer );
 
-	// train the network - learn XOR
-	double learning_rate = 0.5;
-	for( uint32_t i = 0; i < 10000; ++i ) {
+	const	double learning_rate = 0.5;
+
+	//test loop
+	for( uint32_t i = 0; i < 20; ++i ) {
 
 		auto r = network->activate( { 0,0 } );
 		std::cout << " 0 XOR 0 -> " << r[0] << "\n";
 		network->propagate( learning_rate, { 0 } );
 
-		r = network->activate( { 0,0 } );
-		std::cout << " 0 XOR 0 -> " << r[0] << "\n";
+	}
+
+	// train the network - learn XOR
+	for( uint32_t i = 0; i < 10000; ++i ) {
+
+		network->activate( { 0,0 } );
 		network->propagate( learning_rate, { 0 } );
 
 		network->activate( { 0,1 } );

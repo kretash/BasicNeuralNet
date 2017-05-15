@@ -47,7 +47,7 @@ void Network::propagate( double learning_rate, std::vector<double> target ) {
 
 	for( size_t i = 0; i < onodes.size(); ++i ) {
 		auto on = onodes[i];
-		on->_backpropagate( on->m_value, learning_rate );
+		on->_start_backpropagate( learning_rate );
 	}
 
 }

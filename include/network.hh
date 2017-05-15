@@ -15,13 +15,19 @@ static int32_t s_component_id_count = 0;
 static double s_alpha = 0.1; // Momentum
 
 class Component {
-public:
+protected:
 	Component() {
 		m_component_id = ++s_component_id_count;
+	}
+public:
+	Component(std::string name) {
+		m_component_id = ++s_component_id_count;
+		m_name = name;
 	}
 	~Component() {
 
 	}
+	std::string m_name = "Nameless X";
 	int32_t m_component_id = 0;
 };
 
@@ -29,27 +35,33 @@ class Link : public Component {
 protected:
 	Link() {}
 public:
-	Link( std::shared_ptr<Node> from, std::shared_ptr<Node> to );
+	Link( std::shared_ptr<Node> from, std::shared_ptr<Node> to, std::string name = "Link X" );
 	~Link() {}
 
 private:
 	friend class Node;
 
 	void _push( double value );
-	void _fire();
 
-	void _compute_error( double delta, double learning_rate ); 
-	void _backpropagate( double delta, double learning_rate );
+	void _compute_error(	double delta, double learning_rate ); 
+	void _backpropagate( double learning_rate );
 
 	double m_weight = 0.0;
 	double m_delta_weight = 0.0;
+
 	std::shared_ptr<Node> m_link_to;
 	std::shared_ptr<Node> m_link_from;
 };
 
 class Node : public Component {
+protected:
+	Node(){
+		// Not used
+		m_bias = random( 0.0, 1.0 );
+	}
 public:
-	Node() {
+	Node(std::string name = "Layer X" ) {
+		this->m_name = name;
 		m_bias = random( 0.0, 1.0 );
 	};
 	~Node() {};
@@ -64,13 +76,13 @@ private:
 	// Used by the first node to input values into the net.
 	void _input( double value );
 
+	double _sigmoid( double num );
 	// pushes a value to the node. When all links have been pushed
 	// the node will fire the values forward.
 	// at the beginning of the network there will be no way to start as there are no back links.
 	// once all back links have pushed the nodes will fire. If this is the first node it needs 
 	// force start to true as there will be no back nodes.
 	void _push( double value );
-	double _sigmoid( double num );
 	void _fire();
 
 	// computes the error. similar to push but backwards. Start function.
@@ -78,7 +90,9 @@ private:
 	// computes the error. similar to push but backwards.
 	void _compute_error( double delta, double learning_rate);
 
-	void _backpropagate( double delta, double learning_rate );
+	// First backpropagate
+	void _start_backpropagate( double learning_rate );
+	void _backpropagate( double learning_rate );
 
 	bool m_end_node = false;
 
@@ -107,8 +121,7 @@ protected:
 	Layer() {}
 
 public:
-
-	Layer( int32_t nodes );
+	Layer( int32_t nodes, std::string name = "Layer X" );
 	~Layer() {}
 
 	void project( std::shared_ptr<Layer> other_layer );
