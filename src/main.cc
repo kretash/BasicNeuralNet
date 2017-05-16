@@ -23,14 +23,14 @@ int main( int argc, char** argv ) {
 	//test loop
 	for( uint32_t i = 0; i < 20; ++i ) {
 
-		auto r = network->activate( { 0,0 } );
+		std::cout << "-- Feed Forward \n";
+		auto r = network->activate( { 1,0 } );
 		std::cout << " 0 XOR 0 -> " << r[0] << "\n";
-		network->propagate( learning_rate, { 0 } );
-
+		network->propagate( learning_rate, { 1 } );
 	}
 
 	// train the network - learn XOR
-	for( uint32_t i = 0; i < 10000; ++i ) {
+	for( uint32_t i = 0; i < 50000; ++i ) {
 
 		network->activate( { 0,0 } );
 		network->propagate( learning_rate, { 0 } );

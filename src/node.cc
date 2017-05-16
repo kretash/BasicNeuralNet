@@ -41,6 +41,10 @@ void Node::_fire() {
 
 	m_value = _sigmoid( m_synapse_sum + m_bias );
 
+	std::cout << "	m_bias-> " << m_bias << "\n";
+	std::cout << "	m_synapse_sum-> " << m_synapse_sum << "\n";
+	std::cout << "	m_value-> " << m_value << "\n";
+
 	m_synapse_sum = 0;
 	m_forward_load = 0;
 
@@ -54,6 +58,10 @@ void Node::_fire() {
 void Node::_start_compute_error( double delta, double learning_rate ) {
 
 	m_delta = ( 1.0 - m_value ) * m_value * delta;
+
+	std::cout << "	m_error_sum-> " << m_error_sum << "\n";
+	std::cout << "	m_value-> " << m_value << "\n";
+	std::cout << "	m_delta-> " << m_delta << "\n";
 
 	m_error_sum = 0.0;
 	m_backward_load = 0;
@@ -72,6 +80,10 @@ void Node::_compute_error( double delta, double learning_rate ) {
 
 		m_delta = ( 1.0 - m_value ) * m_value * m_error_sum;
 
+		std::cout << "	m_error_sum-> " << m_error_sum << "\n";
+		std::cout << "	m_value-> " << m_value << "\n";
+		std::cout << "	m_delta-> " << m_delta << "\n";
+
 		m_error_sum = 0.0;
 		m_backward_load = 0;
 
@@ -84,6 +96,9 @@ void Node::_compute_error( double delta, double learning_rate ) {
 void Node::_start_backpropagate( double learning_rate ) {
 	
 	m_bias += learning_rate * m_delta;
+
+	std::cout << "	m_delta-> " << m_delta << "\n";
+	std::cout << "	m_bias-> " << m_bias << "\n";
 
 	m_backward_load = 0;
 
@@ -98,6 +113,9 @@ void Node::_backpropagate( double learning_rate ) {
 	if( m_backward_load == m_f_links.size() ) {
 
 		m_bias += learning_rate * m_delta;
+
+		std::cout << "	m_delta-> " << m_delta << "\n";
+		std::cout << "	m_bias-> " << m_bias << "\n";
 
 		m_backward_load = 0;
 
