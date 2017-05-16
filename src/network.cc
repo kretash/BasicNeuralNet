@@ -3,10 +3,10 @@
 
 #include "network.hh"
 
-#define FAKE_RANDOM
+#define FAKE_RANDOM 0
 
 double random( double min, double max ) {
-#ifdef FAKE_RANDOM
+#if FAKE_RANDOM
 	return min + (max - min)*0.75;
 #else
 	return min + static_cast < double > ( rand() ) / ( static_cast < double > ( RAND_MAX / ( max - min ) ) );
@@ -38,18 +38,13 @@ void Network::propagate( double learning_rate, std::vector<double> target ) {
 	assert( target.size() == onodes.size() &&
 		"RESULTS MUST BE THE SIZE OF THE NODES IN THE OUTPUT LAYER" );
 
-	std::cout << "-- Compute Error \n";
-
 	for( size_t i = 0; i < onodes.size(); ++i ) {
 
 		auto on = onodes[i];
 		double this_error = target[i] - on->m_value;
-		std::cout << "	this_error-> " << this_error << "\n";
 		on->_start_compute_error( this_error, learning_rate );
 
 	}
-
-	std::cout << "-- Backpropagate \n";
 
 	for( size_t i = 0; i < onodes.size(); ++i ) {
 		auto on = onodes[i];

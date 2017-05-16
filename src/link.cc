@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "network.hh"
 
 Link::Link( std::shared_ptr<Node> from, std::shared_ptr<Node> to, std::string name ) {
@@ -27,13 +25,10 @@ void Link::_backpropagate( double learning_rate ) {
 
 	m_weight += 
 		learning_rate
-		* ( m_link_to->m_delta * m_link_from->m_value + lamda * m_link_from->m_value )
-		+ s_alpha * m_delta_weight;
+		* ( ( m_link_to->m_delta * m_link_from->m_value ) + ( lamda * m_link_from->m_value ) )
+		+ ( s_alpha *  m_link_to->m_delta_weight );
 
-	m_delta_weight = learning_rate * m_link_to->m_delta * m_link_from->m_value;
-
-	std::cout << "	m_weight-> " << m_weight << "\n";
-	std::cout << "	m_delta_weight-> " << m_delta_weight << "\n";
+	m_link_to->m_delta_weight = learning_rate * m_link_to->m_delta * m_link_from->m_value;
 
 	// Stop at input nodes
 	if( m_link_from->m_b_links.size() != 0 )

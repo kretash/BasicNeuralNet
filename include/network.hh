@@ -12,7 +12,7 @@ double random( double min, double max );
 class Node;
 
 static int32_t s_component_id_count = 0;
-static double s_alpha = 0.1; // Momentum
+static const double s_alpha = 0.1; // Momentum
 
 class Component {
 protected:
@@ -47,7 +47,6 @@ private:
 	void _backpropagate( double learning_rate );
 
 	double m_weight = 0.0;
-	double m_delta_weight = 0.0;
 
 	std::shared_ptr<Node> m_link_to;
 	std::shared_ptr<Node> m_link_from;
@@ -103,6 +102,7 @@ private:
 
 	double m_error_sum = 0.0;
 	double m_delta = 0.0;
+	double m_delta_weight = 0.0;
 	double m_bias = 0.0;
 
 	// When the load is equal to the number of back links the node will fire.
