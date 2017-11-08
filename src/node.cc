@@ -1,3 +1,4 @@
+#include <math.h>
 #include "network.hh"
 
 void Node::add_f_link( std::shared_ptr<Link> link ) {
