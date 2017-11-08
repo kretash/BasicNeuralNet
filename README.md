@@ -37,7 +37,7 @@ This is how our layers look now.
 
 ## Using the Network
 
-To use the network we call the function **activate**. This function will take an std::vector as a parameter that should match in size with the number of nodes in the input layer. The return vector will be the same size as the number of output layers. 
+To use the network we call the function **activate**. This function will take an std::vector as a parameter that should match in size with the number of nodes in the input layer. The return vector will be the same size as the number of output nodes. 
 
 ```cpp
     std::vector<double> output = network->activate( { 0,0 } );
