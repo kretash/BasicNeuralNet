@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <random>
 
 #include "network.hh"
 
@@ -9,7 +10,10 @@ double random( double min, double max ) {
 #if FAKE_RANDOM
 	return min + (max - min)*0.75;
 #else
-	return min + static_cast < double > ( rand() ) / ( static_cast < double > ( RAND_MAX / ( max - min ) ) );
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(min, max);
+    return dis(gen);
 #endif
 }
 
